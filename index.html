@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Think and Grow Rich - Napoleon Hill</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#8B5CF6',
+                        accent: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .drawer {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .drawer.open {
+            transform: translateX(0);
+        }
+        .overlay {
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation Drawer Overlay -->
+    <div id="overlay" class="overlay fixed inset-0 bg-black bg-opacity-50 z-40" onclick="closeDrawer()"></div>
+    
+    <!-- Navigation Drawer -->
+    <div id="drawer" class="drawer fixed left-0 top-0 h-full w-80 bg-white dark:bg-gray-800 shadow-xl z-50 overflow-y-auto">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-white">Menu</h2>
+                <button onclick="closeDrawer()" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Dark Mode Toggle in Drawer -->
+            <div class="mb-6 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-700 dark:text-gray-300">Mode Gelap</span>
+                    <button id="darkModeToggleDrawer" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300 dark:bg-blue-600 transition-colors">
+                        <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform dark:translate-x-6 translate-x-1"></span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
+                <a href="#" onclick="showPage('home'); closeDrawer();" class="flex items-center p-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <span class="text-2xl mr-3">🏠</span>
+                    <span>Beranda</span>
+                </a>
+                <a href="#" onclick="showPage('contents'); closeDrawer();" class="flex items-center p-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <span class="text-2xl mr-3">📚</span>
+                    <span>Daftar Isi</span>
+                </a>
+                <a href="#" onclick="showPage('notes'); closeDrawer();" class="flex items-center p-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <span class="text-2xl mr-3">📝</span>
+                    <span>Catatan Pribadi</span>
+                </a>
+                <a href="#" onclick="showPage('progress'); closeDrawer();" class="flex items-center p-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                    <span class="text-2xl mr-3">📊</span>
+                    <span>Progress Tracker</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="gradient-bg text-white p-4 sticky top-0 z-30 shadow-lg">
+        <div class="flex items-center justify-between">
+            <button onclick="openDrawer()" class="text-white hover:text-gray-200 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <h1 class="text-lg font-bold text-center flex-1">Think and Grow Rich</h1>
+            <div class="w-6"></div> <!-- Spacer for centering -->
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- Home Page -->
+        <div id="homePage" class="page">
+            <!-- Quote Section -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 card-hover">
+                <div class="text-center">
+                    <div class="text-4xl mb-4">💡</div>
+                    <blockquote id="randomQuote" class="text-lg italic text-gray-700 dark:text-gray-300 mb-4"></blockquote>
+                    <cite class="text-sm text-gray-500 dark:text-gray-400">- Napoleon Hill</cite>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 card-hover">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">Tentang Buku</h2>
+                <p class="text-gray-600 dark:text-gray-300 text-justify leading-relaxed">
+                    "Think and Grow Rich" adalah salah satu buku pengembangan diri paling berpengaruh sepanjang masa. Napoleon Hill menghabiskan 20 tahun meneliti rahasia kesuksesan dari 500+ orang terkaya di Amerika, termasuk Andrew Carnegie, Henry Ford, dan Thomas Edison. Buku ini mengungkap 13 prinsip fundamental untuk mencapai kesuksesan finansial dan personal.
+                </p>
+            </div>
+
+            <!-- Quick Access -->
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="showPage('contents')" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-4xl mb-2">📚</div>
+                    <span class="font-semibold">Mulai Belajar</span>
+                </button>
+                <button onclick="showPage('progress')" class="bg-gradient-to-r from-green-500 to-teal-600 text-white p-6 rounded-xl shadow-lg card-hover text-center">
+                    <div class="text-4xl mb-2">📊</div>
+                    <span class="font-semibold">Lihat Progress</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Contents Page -->
+        <div id="contentsPage" class="page hidden">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">13 Prinsip Kesuksesan</h2>
+            <div class="space-y-4" id="principlesList"></div>
+        </div>
+
+        <!-- Detail Page -->
+        <div id="detailPage" class="page hidden">
+            <button onclick="showPage('contents')" class="mb-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Kembali ke Daftar Isi
+            </button>
+            <div id="detailContent"></div>
+        </div>
+
+        <!-- Notes Page -->
+        <div id="notesPage" class="page hidden">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">Catatan Pribadi</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <textarea id="personalNotes" placeholder="Tulis catatan dan refleksi Anda di sini..." 
+                    class="w-full h-64 p-4 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"></textarea>
+                <button onclick="saveNotes()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    Simpan Catatan
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Page -->
+        <div id="progressPage" class="page hidden">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">Progress Tracker</h2>
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <span class="text-lg font-semibold text-gray-800 dark:text-white">Progress Keseluruhan</span>
+                    <span id="overallProgress" class="text-2xl font-bold text-blue-600 dark:text-blue-400">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            <div id="progressChecklist" class="space-y-3"></div>
+        </div>
+    </main>
+
+    <script>
+        // Data prinsip-prinsip
+        const principles = [
+            {
+                id: 1,
+                title: "Desire (Keinginan)",
+                icon: "🔥",
+                concept: "Keinginan yang membara adalah titik awal dari semua pencapaian.",
+                explanation: "Keinginan bukan hanya 'ingin', tetapi obsesi yang membakar. Napoleon Hill menekankan bahwa keinginan yang lemah menghasilkan hasil yang lemah, sementara keinginan yang membara menciptakan kekuatan yang tak terbendung.",
+                example: "Edwin C. Barnes memiliki keinginan yang membara untuk menjadi partner bisnis Thomas Edison. Meskipun tidak memiliki uang, dia berjalan kaki ke laboratorium Edison dan meyakinkannya. Keinginannya yang kuat akhirnya membuatnya menjadi jutawan.",
+                tips: [
+                    "Tuliskan tujuan spesifik Anda dengan detail",
+                    "Visualisasikan pencapaian tujuan setiap hari",
+                    "Buat deadline yang realistis namun menantang",
+                    "Bacakan tujuan Anda dengan lantang setiap pagi dan malam"
+                ]
+            },
+            {
+                id: 2,
+                title: "Faith (Keyakinan)",
+                icon: "🙏",
+                concept: "Keyakinan adalah keadaan pikiran yang dapat dikembangkan melalui afirmasi atau instruksi berulang kepada pikiran bawah sadar.",
+                explanation: "Keyakinan adalah emosi yang dapat diciptakan dan diperkuat. Ketika keyakinan bercampur dengan getaran pemikiran, pikiran bawah sadar langsung mengambil getaran itu dan menerjemahkannya menjadi kenyataan spiritual.",
+                example: "Henry Ford yakin bisa membuat mesin V8 dalam satu blok, meskipun para insinyurnya mengatakan itu mustahil. Keyakinannya yang teguh memotivasi timnya untuk terus mencoba hingga berhasil menciptakan inovasi revolusioner.",
+                tips: [
+                    "Praktikkan afirmasi positif setiap hari",
+                    "Kelilingi diri dengan orang-orang yang mendukung impian Anda",
+                    "Baca kisah sukses orang lain untuk memperkuat keyakinan",
+                    "Eliminasi pikiran negatif dan keraguan dari pikiran Anda"
+                ]
+            },
+            {
+                id: 3,
+                title: "Auto-Suggestion (Sugesti Otomatis)",
+                icon: "🧠",
+                concept: "Sugesti otomatis adalah media komunikasi antara pikiran sadar dan bawah sadar.",
+                explanation: "Melalui pengulangan afirmasi dan visualisasi, kita dapat memprogram pikiran bawah sadar untuk bekerja mencapai tujuan kita. Pikiran bawah sadar tidak membedakan antara kenyataan dan imajinasi yang vivid.",
+                example: "Muhammad Ali menggunakan sugesti otomatis dengan berulang kali mengatakan 'I am the greatest' bahkan sebelum menjadi juara dunia. Afirmasinya yang konsisten membantu membangun kepercayaan diri yang luar biasa.",
+                tips: [
+                    "Buat afirmasi dalam bentuk kalimat positif dan present tense",
+                    "Ulangi afirmasi dengan emosi dan keyakinan",
+                    "Gunakan visualisasi yang detail dan melibatkan semua indera",
+                    "Praktikkan sugesti otomatis saat pikiran rileks (pagi dan malam)"
+                ]
+            },
+            {
+                id: 4,
+                title: "Specialized Knowledge (Pengetahuan Khusus)",
+                icon: "🎓",
+                concept: "Pengetahuan umum tidak akan membawa kekayaan. Hanya pengetahuan khusus yang terorganisir dan diarahkan dengan cerdas yang berguna.",
+                explanation: "Pengetahuan hanya berpotensi menjadi kekuatan ketika diorganisir ke dalam rencana tindakan yang pasti dan diarahkan pada tujuan yang jelas. Pengetahuan yang tidak digunakan tidak memiliki nilai.",
+                example: "Bill Gates tidak menyelesaikan kuliah, tetapi dia memiliki pengetahuan khusus tentang software komputer. Dia mengorganisir pengetahuannya dan membangun Microsoft menjadi perusahaan teknologi terbesar di dunia.",
+                tips: [
+                    "Identifikasi bidang keahlian yang ingin Anda kuasai",
+                    "Investasikan waktu untuk belajar secara mendalam",
+                    "Bergabunglah dengan komunitas atau mastermind group",
+                    "Terapkan pengetahuan dalam proyek nyata"
+                ]
+            },
+            {
+                id: 5,
+                title: "Imagination (Imajinasi)",
+                icon: "💭",
+                concept: "Imajinasi adalah bengkel kerja pikiran manusia di mana semua rencana diciptakan.",
+                explanation: "Ada dua bentuk imajinasi: sintetis (mengatur konsep lama dalam kombinasi baru) dan kreatif (menciptakan sesuatu dari ketiadaan). Imajinasi kreatif bekerja otomatis ketika pikiran sadar bekerja dengan kecepatan tinggi.",
+                example: "Walt Disney membayangkan Disneyland bertahun-tahun sebelum membangunnya. Dia bisa melihat setiap detail taman hiburan dalam imajinasinya, yang kemudian menjadi blueprint untuk kenyataan.",
+                tips: [
+                    "Luangkan waktu untuk melamun dan bermimpi",
+                    "Buat vision board untuk memvisualisasikan tujuan",
+                    "Praktikkan brainstorming tanpa batasan",
+                    "Kombinasikan ide-ide lama untuk menciptakan solusi baru"
+                ]
+            },
+            {
+                id: 6,
+                title: "Organized Planning (Perencanaan Terorganisir)",
+                icon: "📋",
+                concept: "Keinginan tanpa rencana hanyalah angan-angan. Rencana yang terorganisir adalah jembatan antara keinginan dan pencapaian.",
+                explanation: "Rencana yang efektif harus spesifik, dapat diukur, dapat dicapai, relevan, dan memiliki batas waktu. Rencana juga harus fleksibel dan dapat disesuaikan ketika menghadapi tantangan.",
+                example: "Ray Kroc memiliki rencana terorganisir untuk mengembangkan McDonald's. Dia tidak hanya menjual burger, tetapi menciptakan sistem franchise yang dapat direplikasi di seluruh dunia.",
+                tips: [
+                    "Buat rencana tertulis dengan langkah-langkah spesifik",
+                    "Tetapkan milestone dan deadline untuk setiap tahap",
+                    "Review dan revisi rencana secara berkala",
+                    "Siapkan rencana cadangan untuk menghadapi hambatan"
+                ]
+            },
+            {
+                id: 7,
+                title: "Decision (Keputusan)",
+                icon: "⚡",
+                concept: "Orang sukses membuat keputusan dengan cepat dan mengubahnya dengan lambat. Orang gagal membuat keputusan dengan lambat dan mengubahnya dengan cepat.",
+                explanation: "Kemampuan untuk membuat keputusan yang tegas adalah karakteristik kepemimpinan. Keragu-raguan adalah musuh pencapaian. Analisis berlebihan sering kali menyebabkan kelumpuhan dalam bertindak.",
+                example: "Steve Jobs terkenal dengan kemampuannya membuat keputusan cepat dan tegas. Ketika memutuskan untuk kembali ke Apple, dia dengan cepat menghentikan produk-produk yang tidak menguntungkan dan fokus pada inovasi.",
+                tips: [
+                    "Kumpulkan informasi yang cukup, bukan sempurna",
+                    "Tetapkan deadline untuk membuat keputusan",
+                    "Percayai intuisi Anda setelah analisis rasional",
+                    "Belajar dari keputusan yang salah tanpa menyesal berlebihan"
+                ]
+            },
+            {
+                id: 8,
+                title: "Persistence (Ketekunan)",
+                icon: "💪",
+                concept: "Ketekunan adalah faktor penting dalam mengubah keinginan menjadi kenyataan. Ketekunan adalah untuk karakter seperti karbon untuk baja.",
+                explanation: "Kebanyakan orang menyerah ketika menghadapi tantangan pertama. Ketekunan adalah kemampuan untuk terus maju meskipun menghadapi kegagalan, kritik, dan rintangan. Ini adalah kualitas yang dapat dikembangkan.",
+                example: "Colonel Sanders ditolak 1,009 kali sebelum resep ayam gorengnya diterima. Ketekunannya membangun KFC menjadi franchise makanan global yang terkenal di seluruh dunia.",
+                tips: [
+                    "Fokus pada tujuan jangka panjang, bukan hambatan sementara",
+                    "Rayakan kemajuan kecil untuk mempertahankan motivasi",
+                    "Belajar dari kegagalan dan gunakan sebagai bahan bakar",
+                    "Kelilingi diri dengan orang-orang yang mendukung"
+                ]
+            },
+            {
+                id: 9,
+                title: "Master Mind (Kekuatan Pikiran Kolektif)",
+                icon: "👥",
+                concept: "Koordinasi pengetahuan dan usaha dalam semangat harmoni antara dua orang atau lebih untuk mencapai tujuan tertentu.",
+                explanation: "Tidak ada individu yang memiliki pengalaman, pendidikan, kemampuan alami, dan pengetahuan yang cukup untuk memastikan akumulasi kekayaan besar tanpa kerjasama orang lain. Master Mind menciptakan sinergi di mana 1+1=3.",
+                example: "Andrew Carnegie membangun kerajaan baja dengan mengelilingi dirinya dengan 50+ orang ahli dalam Master Mind group. Dia mengakui bahwa kesuksesannya adalah hasil dari kekuatan kolektif tim.",
+                tips: [
+                    "Bentuk grup dengan orang-orang yang memiliki visi serupa",
+                    "Pilih anggota yang saling melengkapi keahlian",
+                    "Adakan pertemuan rutin dengan agenda yang jelas",
+                    "Jaga harmoni dan saling menghormati dalam grup"
+                ]
+            },
+            {
+                id: 10,
+                title: "Sex Transmutation (Transmutasi Energi Seksual)",
+                icon: "🔄",
+                concept: "Energi seksual adalah energi kreatif yang paling kuat. Ketika diarahkan dengan benar, dapat menjadi kekuatan pendorong pencapaian.",
+                explanation: "Hill berpendapat bahwa energi seksual dapat ditransmutasikan menjadi energi kreatif dan produktif. Orang-orang dengan pencapaian tinggi sering kali memiliki sifat seksual yang kuat yang mereka salurkan ke dalam pekerjaan mereka.",
+                example: "Napoleon Bonaparte, Shakespeare, dan George Washington adalah contoh orang yang berhasil mentransmutasikan energi seksual mereka menjadi pencapaian luar biasa dalam bidang masing-masing.",
+                tips: [
+                    "Salurkan energi ke dalam proyek kreatif dan produktif",
+                    "Gunakan energi untuk meningkatkan fokus dan intensitas kerja",
+                    "Praktikkan disiplin diri dan pengendalian diri",
+                    "Fokuskan energi pada tujuan yang bermakna"
+                ]
+            },
+            {
+                id: 11,
+                title: "Subconscious Mind (Pikiran Bawah Sadar)",
+                icon: "🌙",
+                concept: "Pikiran bawah sadar bekerja 24 jam sehari dan dapat diprogram untuk bekerja mencapai tujuan kita.",
+                explanation: "Pikiran bawah sadar adalah stasiun penghubung antara pikiran terbatas manusia dan Kecerdasan Tak Terbatas. Ia dapat dipengaruhi hanya melalui kebiasaan dan pengulangan. Pikiran yang didominasi emosi positif menjadi magnet bagi kekuatan positif.",
+                example: "Thomas Edison menggunakan teknik khusus untuk mengakses pikiran bawah sadarnya. Dia akan tidur siang sambil memegang bola besi, dan ketika tertidur, bola akan jatuh dan membangunkannya untuk mencatat ide-ide yang muncul.",
+                tips: [
+                    "Isi pikiran dengan pemikiran positif sebelum tidur",
+                    "Gunakan afirmasi untuk memprogram pikiran bawah sadar",
+                    "Praktikkan meditasi untuk mengakses kebijaksaan dalam",
+                    "Hindari input negatif sebelum tidur"
+                ]
+            },
+            {
+                id: 12,
+                title: "The Brain (Otak)",
+                icon: "🧩",
+                concept: "Otak manusia adalah stasiun penyiaran dan penerima untuk getaran pemikiran.",
+                explanation: "Otak dapat menangkap getaran pemikiran yang dipancarkan oleh otak lain. Ketika dua atau lebih orang berkoordinasi dalam semangat harmoni, mereka menempatkan diri dalam posisi untuk menyerap pemikiran satu sama lain.",
+                example: "Para ilmuwan sering kali menemukan teori atau penemuan yang sama secara bersamaan di tempat yang berbeda, menunjukkan bahwa ide-ide dapat 'ditransmisikan' melalui getaran pemikiran.",
+                tips: [
+                    "Jaga kesehatan otak dengan nutrisi yang baik",
+                    "Latih otak dengan tantangan mental yang beragam",
+                    "Praktikkan mindfulness untuk meningkatkan fokus",
+                    "Kelilingi diri dengan pemikir-pemikir hebat"
+                ]
+            },
+            {
+                id: 13,
+                title: "The Sixth Sense (Indera Keenam)",
+                icon: "👁️",
+                concept: "Indera keenam adalah bagian dari pikiran bawah sadar yang disebut Imajinasi Kreatif.",
+                explanation: "Indera keenam adalah fakultas mental yang memberikan peringatan tentang bahaya yang akan datang dan memberitahu tentang peluang untuk keuntungan. Ini adalah 'penerima' yang memungkinkan ide-ide kreatif untuk 'berkilat' ke dalam pikiran.",
+                example: "Andrew Carnegie sering membuat keputusan bisnis berdasarkan 'firasat' yang kemudian terbukti sangat menguntungkan. Dia percaya bahwa indera keenamnya membimbingnya dalam mengambil keputusan penting.",
+                tips: [
+                    "Dengarkan intuisi dan firasat Anda",
+                    "Praktikkan meditasi untuk mengembangkan kepekaan",
+                    "Catat dan analisis 'kebetulan' yang terjadi dalam hidup",
+                    "Percayai kemampuan alami Anda untuk 'merasakan' situasi"
+                ]
+            }
+        ];
+
+        // Quotes inspiratif
+        const quotes = [
+            "Apa pun yang dapat dipahami dan dipercayai oleh pikiran, dapat dicapai.",
+            "Keinginan adalah titik awal dari semua pencapaian.",
+            "Kegagalan adalah guru yang hebat, dan saya pikir ketika Anda membuat kesalahan dan Anda pulih dari mereka dan Anda memperlakukan mereka sebagai pengalaman berharga, maka Anda memiliki sesuatu untuk dibagikan.",
+            "Jangan menunggu. Waktu tidak akan pernah 'tepat'.",
+            "Ketekunan adalah faktor penting dalam mengubah keinginan menjadi setara moneternya.",
+            "Setiap kemalangan membawa benih keuntungan yang setara atau lebih besar.",
+            "Pikiran adalah hal yang paling kuat di dunia.",
+            "Tujuan yang pasti, ditambah dengan rencana yang pasti, didukung oleh tindakan yang pasti, adalah formula yang pasti untuk sukses."
+        ];
+
+        // State management
+        let currentPage = 'home';
+        let checkedItems = JSON.parse(localStorage.getItem('checkedItems') || '{}');
+        let personalNotes = localStorage.getItem('personalNotes') || '';
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadRandomQuote();
+            loadPersonalNotes();
+            updateProgress();
+            initializeDarkMode();
+        });
+
+        function initializeApp() {
+            renderPrinciplesList();
+            renderProgressChecklist();
+        }
+
+        // Navigation functions
+        function openDrawer() {
+            document.getElementById('drawer').classList.add('open');
+            document.getElementById('overlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer').classList.remove('open');
+            document.getElementById('overlay').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId + 'Page').classList.remove('hidden');
+            currentPage = pageId;
+        }
+
+        function showPrincipleDetail(id) {
+            const principle = principles.find(p => p.id === id);
+            if (!principle) return;
+
+            const detailContent = document.getElementById('detailContent');
+            detailContent.innerHTML = `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4">${principle.icon}</div>
+                        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">${principle.title}</h1>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">💡 Konsep Inti</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-justify leading-relaxed">${principle.concept}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">📖 Penjelasan Praktis</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-justify leading-relaxed">${principle.explanation}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">🌟 Contoh Penerapan</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-justify leading-relaxed">${principle.example}</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">💪 Tips Implementasi</h3>
+                            <ul class="space-y-2">
+                                ${principle.tips.map(tip => `
+                                    <li class="flex items-start">
+                                        <span class="text-blue-500 mr-2 mt-1">•</span>
+                                        <span class="text-gray-600 dark:text-gray-300 text-justify">${tip}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showPage('detail');
+        }
+
+        function renderPrinciplesList() {
+            const container = document.getElementById('principlesList');
+            container.innerHTML = principles.map(principle => `
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 card-hover cursor-pointer" 
+                     onclick="showPrincipleDetail(${principle.id})">
+                    <div class="flex items-center">
+                        <div class="text-4xl mr-4 flex-shrink-0">${principle.icon}</div>
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-1">${principle.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm text-justify">${principle.concept}</p>
+                        </div>
+                        <svg class="w-6 h-6 text-gray-400 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderProgressChecklist() {
+            const container = document.getElementById('progressChecklist');
+            container.innerHTML = principles.map(principle => `
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+                    <label class="flex items-center cursor-pointer">
+                        <input type="checkbox" 
+                               class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 mr-3"
+                               ${checkedItems[principle.id] ? 'checked' : ''}
+                               onchange="toggleCheck(${principle.id})">
+                        <div class="flex items-center flex-1">
+                            <span class="text-2xl mr-3">${principle.icon}</span>
+                            <span class="text-gray-800 dark:text-white font-medium">${principle.title}</span>
+                        </div>
+                    </label>
+                </div>
+            `).join('');
+        }
+
+        function toggleCheck(id) {
+            checkedItems[id] = !checkedItems[id];
+            localStorage.setItem('checkedItems', JSON.stringify(checkedItems));
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalItems = principles.length;
+            const checkedCount = Object.values(checkedItems).filter(Boolean).length;
+            const percentage = Math.round((checkedCount / totalItems) * 100);
+            
+            document.getElementById('overallProgress').textContent = percentage + '%';
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        function loadRandomQuote() {
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            document.getElementById('randomQuote').textContent = quotes[randomIndex];
+        }
+
+        function loadPersonalNotes() {
+            document.getElementById('personalNotes').value = personalNotes;
+        }
+
+        function saveNotes() {
+            const notes = document.getElementById('personalNotes').value;
+            localStorage.setItem('personalNotes', notes);
+            personalNotes = notes;
+            
+            // Show success message
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = 'Tersimpan!';
+            button.classList.add('bg-green-600');
+            button.classList.remove('bg-blue-600');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600');
+                button.classList.add('bg-blue-600');
+            }, 2000);
+        }
+
+        // Dark mode functionality
+        function initializeDarkMode() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            // Set up toggle buttons
+            const toggleButtons = [
+                document.getElementById('darkModeToggleDrawer')
+            ];
+            
+            toggleButtons.forEach(button => {
+                if (button) {
+                    button.addEventListener('click', toggleDarkMode);
+                }
+            });
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', isDark);
+        }
+
+        // Touch events for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - close drawer
+                    closeDrawer();
+                } else {
+                    // Swipe right - open drawer (only if near left edge)
+                    if (touchStartX < 50) {
+                        openDrawer();
+                    }
+                }
+            }
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97fe7573a75940c7',t:'MTc1ODAwNTczMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
